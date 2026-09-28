@@ -252,7 +252,7 @@ Content-Type: application/json
 
 ```bash
 git clone <repository-url>
-cd Assignment-2
+cd ai-email-generator-service
 npm install
 ```
 
