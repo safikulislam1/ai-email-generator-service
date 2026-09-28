@@ -107,7 +107,11 @@ async function handleGenerate(event) {
 
     // Show response time log metric
     if (json.meta && typeof json.meta.response_time_ms !== 'undefined') {
-      document.getElementById('responseTimeVal').innerText = `${json.meta.response_time_ms}ms`;
+      let badgeText = `${json.meta.response_time_ms}ms`;
+      if (json.meta.quota_limit) {
+        badgeText += ` (Quota Limit: ${json.meta.quota_limit} | Used: ${json.meta.quota_used || json.meta.quota_limit})`;
+      }
+      document.getElementById('responseTimeVal').innerText = badgeText;
       document.getElementById('timingBadge').classList.remove('hidden');
     }
 

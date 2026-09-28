@@ -112,6 +112,35 @@ describe('AI Email Template Generator API Tests', () => {
       expect(res.body.meta).toHaveProperty('request_id', 'req-123');
     });
 
+    it('should pass through quota_limit and quota_used in response meta when fallback engine is used', async () => {
+      global.fetch = jest.fn(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ...aiResponse,
+          meta: {
+            ...aiResponse.meta,
+            model_used: 'fallback-template-engine (error-recovery)',
+            status: 'degraded',
+            quota_limit: '20',
+            quota_used: '20'
+          }
+        })
+      }));
+
+      const res = await request(app)
+        .post('/api/v1/generate-email')
+        .send({
+          purpose: 'Follow up on demo',
+          recipient_name: 'Sarah',
+          tone: 'professional'
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.meta).toHaveProperty('quota_limit', '20');
+      expect(res.body.meta).toHaveProperty('quota_used', '20');
+    });
+
   });
 
 });
