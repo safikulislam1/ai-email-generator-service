@@ -1,0 +1,32 @@
+services:
+  api-gateway:
+    build: .
+    command: node gateway/server.js
+    ports:
+      - "3000:3000"
+    environment:
+      GATEWAY_PORT: 3000
+      EMAIL_SERVICE_URL: http://email-service:3001
+    depends_on:
+      - email-service
+
+  email-service:
+    build: .
+    command: node services/email-service/server.js
+    expose:
+      - "3001"
+    environment:
+      EMAIL_SERVICE_PORT: 3001
+      AI_SERVICE_URL: http://ai-service:3002
+    depends_on:
+      - ai-service
+
+  ai-service:
+    build: .
+    command: node services/ai-service/server.js
+    expose:
+      - "3002"
+    environment:
+      AI_SERVICE_PORT: 3002
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.6-flash}

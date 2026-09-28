@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Email Template Generator - Microservice Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-text">
+          <h1>AI Email Generator</h1>
+          <span class="badge-microservice">Express Microservice v1.0</span>
+        </div>
+      </div>
+      <div class="status-pill" id="healthPill">
+        <span class="dot"></span>
+        <span id="healthText">Checking Service...</span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-grid">
+      <!-- Input Column -->
+      <section class="card input-card">
+        <div class="card-header">
+          <h2>Generate Email Template</h2>
+          <p>Fill out the fields below or click a quick preset to test the API.</p>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="presets-container">
+          <span class="preset-label">Quick Presets:</span>
+          <button type="button" class="preset-btn" onclick="applyPreset('demo')">Demo Request</button>
+          <button type="button" class="preset-btn" onclick="applyPreset('payment')">Payment Reminder</button>
+          <button type="button" class="preset-btn" onclick="applyPreset('welcome')">Welcome Onboarding</button>
+          <button type="button" class="preset-btn" onclick="applyPreset('discount')">Exclusive Offer</button>
+        </div>
+
+        <form id="emailForm" onsubmit="handleGenerate(event)">
+          <!-- Required Field: Recipient Name -->
+          <div class="form-group">
+            <label for="recipient_name">
+              Recipient Name <span class="req">*</span>
+            </label>
+            <input type="text" id="recipient_name" placeholder="e.g. Sarah Jenkins" required>
+          </div>
+
+          <!-- Required Field: Purpose -->
+          <div class="form-group">
+            <label for="purpose">
+              Purpose of Email <span class="req">*</span>
+            </label>
+            <textarea id="purpose" rows="3"
+              placeholder="e.g. Follow up on product demo request and schedule a 15-minute call" required></textarea>
+          </div>
+
+          <!-- Required Field: Tone -->
+          <div class="form-group">
+            <label for="tone">
+              Desired Tone <span class="req">*</span>
+            </label>
+            <select id="tone" required>
+              <option value="professional" selected>Professional (Polished & Respectful)</option>
+              <option value="casual">Casual (Friendly & Conversational)</option>
+              <option value="urgent">Urgent (Direct & Action-Oriented)</option>
+              <option value="persuasive">Persuasive (Value & Benefit Focused)</option>
+              <option value="empathetic">Empathetic (Caring & Supportive)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="generateBtn">
+            <span class="btn-text">Generate Template</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Output Column -->
+      <section class="card output-card">
+        <div class="card-header flex-between">
+          <div>
+            <h2>Generated Output</h2>
+            <p>Live response parsed from <code class="code-inline">POST /api/v1/generate-email</code></p>
+          </div>
+          <div id="timingBadge" class="timing-badge hidden">
+            <span>AI Latency:</span> <strong id="responseTimeVal">0ms</strong>
+          </div>
+        </div>
+
+        <!-- Initial Placeholder State -->
+        <div id="emptyState" class="empty-state">
+          <h3>No Email Generated Yet</h3>
+          <p>Fill in the parameters on the left and hit "Generate Template" to see live AI responses & performance logs.
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p class="loading-text">Communicating with AI Service...</p>
+          <span class="loading-sub">Calculating response time log</span>
+        </div>
+
+        <!-- Result Container -->
+        <div id="resultState" class="result-state hidden">
+          <!-- Subject Line Box -->
+          <div class="email-preview-box">
+            <div class="preview-header">
+              <span class="label">Subject Line</span>
+              <button type="button" class="copy-btn" onclick="copyText('subjectText')">Copy Subject</button>
+            </div>
+            <div class="subject-content" id="subjectText"></div>
+          </div>
+
+          <!-- Email Body Box -->
+          <div class="email-preview-box">
+            <div class="preview-header">
+              <span class="label">Email Content</span>
+              <button type="button" class="copy-btn" onclick="copyText('bodyText')">Copy Email</button>
+            </div>
+            <div class="body-content" id="bodyText"></div>
+          </div>
+
+          <!-- Meta / Tone explanation -->
+          <div class="meta-footer">
+            <div class="tone-badge" id="toneBadge">Tone: Professional</div>
+            <div class="explanation-text" id="explanationText"></div>
+          </div>
+
+          <!-- Raw API Response Accordion -->
+          <details class="json-accordion">
+            <summary>Raw API Response JSON (with response time logs)</summary>
+            <pre><code id="jsonCode"></code></pre>
+          </details>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

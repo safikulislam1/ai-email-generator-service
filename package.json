@@ -1,0 +1,36 @@
+{
+  "name": "ai-email-generator-service",
+  "version": "1.0.0",
+  "description": "AI-Powered Email Template Generator Service built with Node.js, Express.js, and Google Gemini AI",
+  "main": "gateway/server.js",
+  "scripts": {
+    "start": "node gateway/server.js",
+    "start:gateway": "node gateway/server.js",
+    "start:email": "node services/email-service/server.js",
+    "start:ai": "node services/ai-service/server.js",
+    "dev": "node --watch gateway/server.js",
+    "test": "jest --runInBand --forceExit"
+  },
+  "keywords": [
+    "email-generator",
+    "ai",
+    "gemini",
+    "express",
+    "nodejs",
+    "microservice"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
